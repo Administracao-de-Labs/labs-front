@@ -1,0 +1,1 @@
+// centraliza as chamadas http

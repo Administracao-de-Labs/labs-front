@@ -1,0 +1,1 @@
+// centraliza lógica do console
