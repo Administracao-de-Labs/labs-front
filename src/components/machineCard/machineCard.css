@@ -1,0 +1,173 @@
+.machine-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.machine-card:hover {
+  border-color: #5eead4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.machine-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.machine-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.machine-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #ccfbf1;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.machine-hostname {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.machine-address {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+.uuid-box {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.uuid-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  font-family: monospace;
+  color: #9ca3af;
+  letter-spacing: 1px;
+}
+
+.uuid-value {
+  font-size: 12px;
+  font-family: monospace;
+  color: #6b7280;
+  word-break: break-all;
+}
+
+.os-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.os-badge.windows {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.os-badge.linux {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.os-badge.mac {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.os-badge.default {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.terminal-box {
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.terminal-box.success {
+  background: #111827;
+  color: white;
+}
+
+.terminal-box.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-family: monospace;
+}
+
+.terminal-content {
+  font-size: 12px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.whoami-button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #99f6e4;
+  background: #ccfbf1;
+  color: #0f766e;
+  font-size: 14px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.whoami-button:hover:not(:disabled) {
+  background: #99f6e4;
+}
+
+.whoami-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,155 @@
+.machine-list {
+  width: 100%;
+}
+
+.machine-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.machine-list-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.machine-list-subtitle {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 12px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #6b7280;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition: all 0.2s;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.refresh-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.machines-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+  .machines-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .machines-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.machine-skeleton {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
+
+  animation: pulse 1.5s infinite;
+}
+
+.machine-skeleton-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.machine-skeleton-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+.machine-skeleton-info {
+  flex: 1;
+}
+
+.machine-skeleton-line {
+  background: #f3f4f6;
+  border-radius: 6px;
+}
+
+.line-large {
+  width: 66%;
+  height: 14px;
+  margin-bottom: 8px;
+}
+
+.line-small {
+  width: 50%;
+  height: 10px;
+}
+
+.machine-skeleton-content {
+  height: 48px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.machine-skeleton-button {
+  height: 36px;
+  background: #f3f4f6;
+  border-radius: 12px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
