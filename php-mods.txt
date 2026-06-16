@@ -1,0 +1,41 @@
+[PHP Modules]
+bcmath
+calendar
+Core
+ctype
+curl
+date
+dom
+filter
+hash
+iconv
+json
+lexbor
+libxml
+mbstring
+mysqlnd
+openssl
+pcre
+PDO
+pdo_mysql
+Phar
+random
+readline
+Reflection
+session
+SimpleXML
+sockets
+SPL
+standard
+tokenizer
+uri
+xml
+xmlreader
+xmlwriter
+Zend OPcache
+zip
+zlib
+
+[Zend Modules]
+Zend OPcache
+

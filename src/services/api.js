@@ -9,3 +9,16 @@ export async function listClients() {
     return response.json();
 }
 
+export async function sendCommand(event,channel) {
+    const response = await fetch(`${BASE_URL}/api/v1/events`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(client.command)
+    });
+    if (!response.ok) {
+        throw new Error('Erro ao enviar comando');
+    }
+    return response.json();
+    }
