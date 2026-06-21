@@ -83,51 +83,52 @@
 .machine-card-details {
   background: #f9fafb;
   border-radius: 10px;
-  padding: 12px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   font-size: 13px;
 }
 
-.detail-row {
+.detail-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .detail-label {
   color: #6b7280;
-  font-weight: 500;
-  min-width: 80px;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .detail-value-with-copy {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   flex: 1;
 }
 
 .detail-value {
   background: white;
-  padding: 4px 8px;
+  padding: 8px 10px;
   border-radius: 6px;
   font-family: 'Courier New', monospace;
-  color: #374151;
+  color: #1f2937;
   font-size: 12px;
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-all;
+  border: 1px solid #e5e7eb;
+  line-height: 1.5;
 }
 
 .copy-button {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: 6px 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -135,12 +136,20 @@
   transition: all 0.2s;
   color: #6b7280;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .copy-button:hover {
   border-color: #5eead4;
   color: #0d9488;
   background: #f0fdfa;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .machine-card-command {

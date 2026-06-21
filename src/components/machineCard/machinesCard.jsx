@@ -49,14 +49,14 @@ export default function MachineCard({ machine, onRunCommand, loading, result }) 
       </div>
 
       <div className="machine-card-details">
-        <div className="detail-row">
-          <span className="detail-label">UUID:</span>
+        <div className="detail-item">
+          <span className="detail-label">Identificador:</span>
           <div className="detail-value-with-copy">
-            <code className="detail-value">{machine.uuid.slice(0, 12)}...</code>
+            <code className="detail-value">{machine.uuid}</code>
             <button
               onClick={() => copyToClipboard(machine.uuid, 'uuid')}
               className="copy-button"
-              title="Copiar UUID"
+              title="Copiar UUID completo"
             >
               {copiedField === 'uuid' ? (
                 <CheckCircle size={16} className="text-green-600" />
@@ -67,9 +67,22 @@ export default function MachineCard({ machine, onRunCommand, loading, result }) 
           </div>
         </div>
 
-        <div className="detail-row">
-          <span className="detail-label">IP:Porta:</span>
-          <code className="detail-value">{machine.ip}:{machine.port}</code>
+        <div className="detail-item">
+          <span className="detail-label">Endereço:</span>
+          <div className="detail-value-with-copy">
+            <code className="detail-value">{machine.ip}:{machine.port}</code>
+            <button
+              onClick={() => copyToClipboard(`${machine.ip}:${machine.port}`, 'address')}
+              className="copy-button"
+              title="Copiar endereço"
+            >
+              {copiedField === 'address' ? (
+                <CheckCircle size={16} className="text-green-600" />
+              ) : (
+                <Copy size={16} />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -105,7 +118,7 @@ export default function MachineCard({ machine, onRunCommand, loading, result }) 
       {result && (
         <div className="machine-card-result">
           <div className="result-header">
-            <span className="result-label">Output:</span>
+            <span className="result-label">📋 Output:</span>
             <button
               onClick={() => copyToClipboard(result.output || JSON.stringify(result))}
               className="copy-result-button"

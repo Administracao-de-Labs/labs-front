@@ -2,15 +2,19 @@ import './machineList.css'
 import { useMachine } from '../../hooks/useMachine'
 import MachineCard from '../machineCard/machinesCard'
 import { RefreshCw, AlertCircle } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function MachineList() {
   const { clients, loading, error, refreshClients, runWhoami, runCommandLoading, runCommandResult } = useMachine()
   const [selectedMachineResult, setSelectedMachineResult] = useState({})
 
+  useEffect(() => {
+    console.log('Componente MachineList - Clientes:', clients);
+    console.log('Componente MachineList - Loading:', loading);
+    console.log('Componente MachineList - Error:', error);
+  }, [clients, loading, error]);
+
   const handleRunCommand = (command, uuid) => {
-    // Para este exemplo, apenas chamamos runWhoami
-    // Você pode expandir para suportar comandos customizados
     runWhoami(uuid)
     setSelectedMachineResult(prev => ({
       ...prev,
@@ -19,15 +23,17 @@ export default function MachineList() {
   }
 
   // Quando o resultado chega, salvar para a máquina específica
-  if (runCommandResult && Object.keys(selectedMachineResult).length > 0) {
-    const lastUuid = Object.keys(selectedMachineResult)[Object.keys(selectedMachineResult).length - 1]
-    if (selectedMachineResult[lastUuid] !== runCommandResult) {
-      setSelectedMachineResult(prev => ({
-        ...prev,
-        [lastUuid]: runCommandResult
-      }))
+  useEffect(() => {
+    if (runCommandResult && selectedMachineResult) {
+      const lastUuid = Object.keys(selectedMachineResult).find(uuid => selectedMachineResult[uuid] === null)
+      if (lastUuid) {
+        setSelectedMachineResult(prev => ({
+          ...prev,
+          [lastUuid]: runCommandResult
+        }))
+      }
     }
-  }
+  }, [runCommandResult]);
 
   return (
     <div className="machine-list">
@@ -70,12 +76,7 @@ export default function MachineList() {
             </div>
           ))}
         </div>
-      ) : clients.length === 0 ? (
-        <div className="empty-state">
-          <p className="empty-state-text">Nenhuma máquina conectada</p>
-          <p className="empty-state-subtext">Inicie o socket-client.php para conectar uma máquina</p>
-        </div>
-      ) : (
+      ) : clients && clients.length > 0 ? (
         <div className="machines-grid">
           {clients.map(machine => (
             <MachineCard
@@ -86,6 +87,11 @@ export default function MachineList() {
               result={selectedMachineResult[machine.uuid]}
             />
           ))}
+        </div>
+      ) : (
+        <div className="empty-state">
+          <p className="empty-state-text">Nenhuma máquina conectada</p>
+          <p className="empty-state-subtext">Inicie o socket-client.php para conectar uma máquina</p>
         </div>
       )}
     </div>
