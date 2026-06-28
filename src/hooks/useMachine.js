@@ -1,6 +1,9 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import {listClients, sendCommand} from "../services/api";
+import { listClients, sendCommand } from "../services/api";
 
+/**
+ * Hook customizado para gerenciamento do ciclo de vida, polling e execução de ações rápidas nas máquinas.
+ */
 export function useMachine() {
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -9,8 +12,8 @@ export function useMachine() {
     const [runCommandResult, setRunCommandResult] = useState(null);
     const intervalRef = useRef(null);
 
+    // Solicita a atualização cadastral do pool de computadores ativos
     const refreshClients = useCallback(async () => {
-        // Não atualizar lista enquanto comando está em execução
         if (runCommandLoading) return;
         
         setLoading(true);
@@ -28,11 +31,10 @@ export function useMachine() {
         }
     }, [runCommandLoading]);
 
+    // Estabelece o mecanismo de polling contínuo a cada 5 segundos
     useEffect(() => {
-        // Carregar clientes na primeira vez
         refreshClients();
         
-        // Setup interval para atualizar a cada 5 segundos
         intervalRef.current = setInterval(refreshClients, 5000);
         
         return () => {
@@ -40,7 +42,7 @@ export function useMachine() {
         };
     }, [refreshClients]);
 
-    // Alterado: agora aceita o texto digitado (command) como parâmetro
+    // Executa as ações predefinidas enviando a carga útil para o barramento da VPS
     const runCustomCommand = useCallback(async (command, channel) => {
         setRunCommandLoading(true);
         setRunCommandResult(null);
@@ -68,7 +70,7 @@ export function useMachine() {
         loading,
         error,
         refreshClients,
-        runCustomCommand, // Nome atualizado no retorno
+        runCustomCommand,
         runCommandLoading,
         runCommandResult
     };

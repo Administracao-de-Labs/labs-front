@@ -327,14 +327,16 @@
 .result-output {
   font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
   font-size: 12px; 
-  line-height: 1.6;
+  line-height: 1.5;
   color: #e5e7eb;
   margin: 0;
-  overflow-x: auto; 
-  overflow-y: auto; 
   max-height: 480px; 
-  padding-right: 8px;
-  white-space: pre; 
+  padding-bottom: 8px;
+  
+  /* Mantém o alinhamento rígido em colunas e habilita a rolagem lateral caso estique */
+  white-space: pre;       
+  overflow-x: auto; 
+  word-break: normal;
   word-wrap: normal;
 }
 

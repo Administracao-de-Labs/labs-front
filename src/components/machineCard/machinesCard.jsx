@@ -1,8 +1,8 @@
 import './machineCard.css'
-import { Monitor, Loader, Copy, CheckCircle } from 'lucide-react'
+import { Monitor, Copy, CheckCircle } from 'lucide-react'
 import { useState } from 'react'
 
-// Mapeamento de classes CSS baseado no sistema operacional recebido do socket
+// Vincula o nome do sistema operacional recebido às classes CSS de estilização
 const OS_COLORS = {
   Windows: 'os-badge windows',
   Linux: 'os-badge linux',
@@ -10,6 +10,7 @@ const OS_COLORS = {
   macOS: 'os-badge mac',
 }
 
+// Renderiza o componente de identificação visual do sistema operacional
 function OsCor({ os }) {
   const color = OS_COLORS[os] || 'os-badge default'
   return <span className={color}>{os}</span>
@@ -18,33 +19,51 @@ function OsCor({ os }) {
 export default function MachineCard({ machine, onRunCommand, loading, result }) {
   const [copiedField, setCopiedField] = useState(null)
 
-  // Copia cadeias de texto para a área de transferência com feedback visual temporário
+  // Move a cadeia de caracteres para a área de transferência do sistema operacional
   const copyToClipboard = (text, field) => {
     navigator.clipboard.writeText(text)
     setCopiedField(field)
     setTimeout(() => setCopiedField(null), 2000)
   }
 
-  // Identificação lógica para montagem da cadeia de comandos multiplataforma
+  // Define os sinalizadores lógicos para segmentação do ecossistema multiplataforma
   const isWindows = machine.operationSystem === 'Windows';
   const isMac = machine.operationSystem === 'Darwin' || machine.operationSystem === 'macOS';
   const isLinux = machine.operationSystem === 'Linux';
 
-  // Alocação dos scripts básicos de rede, reinício e desligamento
+  // Define as instruções de rede, reinicialização e desligamento por plataforma
   const cmdNet = isWindows ? 'ipconfig' : (isMac ? 'ifconfig' : (isLinux ? 'ip a' : 'ip a'));
   const cmdReboot = isWindows ? 'shutdown /r /t 0' : (isMac ? 'sudo shutdown -r now' : (isLinux ? 'sudo reboot' : 'sudo reboot'));
   const cmdShutdown = isWindows ? 'shutdown /s /t 0' : (isMac ? 'sudo shutdown -h now' : (isLinux ? 'sudo poweroff' : 'sudo poweroff'));
 
-  // Tempo de atividade do sistema operacional
-  const cmdUptime = isWindows ? 'net statistics workstation' : (isMac ? 'uptime' : (isLinux ? 'uptime -p' : 'uptime'));
+  // Determina a rotina de extração do tempo de atividade do host de destino
+  const cmdUptime = isWindows 
+    ? 'powershell -Command "(Get-Date) - (Get-CimInstance Win32_OperatingSystem).LastBootUpTime | Select-Object -Property Days, Hours, Minutes | Format-List"' 
+    : (isMac ? 'uptime' : (isLinux ? 'uptime -p' : 'uptime'));
   
-  // Lista de sessões de usuários ativas
+  // Mapeia a busca por sessões de usuários ativas concorrentes no terminal
   const cmdUsers = isWindows ? 'query user' : 'who';
   
-  // Uso de WMIC para eliminar o travamento de pipes (|) em fluxos de buffers assíncronos no Windows
+  // Captura as especificações de hardware e versão do núcleo operacional
   const cmdHardware = isWindows 
     ? 'wmic os get Caption, Version /value && wmic computersystem get TotalPhysicalMemory /value' 
-    : (isMac ? 'sw_vers && sysctl -n hw.memsize' : 'uname -sm && free -h | grep Mem');
+    : (isMac ? 'sw_vers && sysctl -n hw.memsize' : 'uname -sm && free -h | grep -E "(Mem|Total|..:)"');
+
+  // Trata e limpa a resposta de saída do terminal contida na carga útil JSON
+  const parseTerminalOutput = (rawResult) => {
+    if (!rawResult) return '';
+    
+    if (typeof rawResult === 'object' && rawResult !== null) {
+      return rawResult.output || rawResult.error || JSON.stringify(rawResult);
+    }
+
+    try {
+      const parsed = JSON.parse(rawResult);
+      return parsed.output || rawResult;
+    } catch (e) {
+      return rawResult;
+    }
+  };
 
   return (
     <div className="machine-card">
@@ -159,20 +178,20 @@ export default function MachineCard({ machine, onRunCommand, loading, result }) 
         </button>
       </div>
 
-      {/* Bloco de terminal isolado para exibição do resultado */}
+      {/* Bloco de terminal isolado para exibição e decodificação do resultado */}
       {result && (
         <div className="machine-card-result">
           <div className="result-header">
             <span className="result-label">📋 Output do Terminal:</span>
             <button
-              onClick={() => copyToClipboard(result.output || JSON.stringify(result))}
+              onClick={() => copyToClipboard(parseTerminalOutput(result))}
               className="copy-result-button"
               title="Copiar resultado"
             >
               <Copy size={14} />
             </button>
           </div>
-          <pre className="result-output">{result.output || JSON.stringify(result, null, 2)}</pre>
+          <pre className="result-output">{parseTerminalOutput(result)}</pre>
         </div>
       )}
     </div>

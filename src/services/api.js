@@ -1,5 +1,5 @@
-// Centraliza o endereço base do servidor de sockets para requisições HTTP
-const BASE_URL = 'http://localhost:4000';
+// Atribui o endereço base do servidor de sockets por meio do ambiente Vite ou utiliza o loopback como segurança
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 /**
  * Busca a lista de clientes (máquinas dos laboratórios) conectados ao servidor.
