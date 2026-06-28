@@ -5,24 +5,22 @@ import { RefreshCw, AlertCircle } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 export default function MachineList() {
-  const { clients, loading, error, refreshClients, runWhoami, runCommandLoading, runCommandResult } = useMachine()
+  // Extrai do hook customizado o array de clientes e as funções de execução remota
+  const { clients, loading, error, refreshClients, runCustomCommand, runCommandLoading, runCommandResult } = useMachine()
+  
+  // Mapeia e distribui as respostas dos terminais de forma indexada pelo UUID da máquina escrava
   const [selectedMachineResult, setSelectedMachineResult] = useState({})
 
-  useEffect(() => {
-    console.log('Componente MachineList - Clientes:', clients);
-    console.log('Componente MachineList - Loading:', loading);
-    console.log('Componente MachineList - Error:', error);
-  }, [clients, loading, error]);
-
+  // Repassa a string de comando manual ou atalho gerada pelo card de origem
   const handleRunCommand = (command, uuid) => {
-    runWhoami(uuid)
+    runCustomCommand(command, uuid)
     setSelectedMachineResult(prev => ({
       ...prev,
-      [uuid]: null
+      [uuid]: null // Zera o output anterior do card alvo para indicar o estado de execução pendente
     }))
   }
 
-  // Quando o resultado chega, salvar para a máquina específica
+  // Intercepta e vincula a resposta do barramento socket ao respectivo UUID solicitante
   useEffect(() => {
     if (runCommandResult && selectedMachineResult) {
       const lastUuid = Object.keys(selectedMachineResult).find(uuid => selectedMachineResult[uuid] === null)
@@ -37,6 +35,7 @@ export default function MachineList() {
 
   return (
     <div className="machine-list">
+      {/* Topo do painel: Métricas e botão de atualização assíncrona */}
       <div className="machine-list-header">
         <div>
           <h2 className="machine-list-title">Máquinas Conectadas</h2>
@@ -55,6 +54,7 @@ export default function MachineList() {
         </button>
       </div>
 
+      {/* Renderização de alertas de erro de conexão com a API */}
       {error && (
         <div className="error-container">
           <AlertCircle size={20} />
@@ -62,6 +62,7 @@ export default function MachineList() {
         </div>
       )}
 
+      {/* Renderização dos esqueletos visuais durante o carregamento de conexões em lote */}
       {loading && clients.length === 0 ? (
         <div className="machines-grid">
           {[1, 2, 3].map(i => (
@@ -77,6 +78,7 @@ export default function MachineList() {
           ))}
         </div>
       ) : clients && clients.length > 0 ? (
+        /* Renderização controlada da grade de computadores escravos ativos */
         <div className="machines-grid">
           {clients.map(machine => (
             <MachineCard
@@ -89,6 +91,7 @@ export default function MachineList() {
           ))}
         </div>
       ) : (
+        /* Container informativo exibido caso não hajam instâncias escravas registradas no servidor */
         <div className="empty-state">
           <p className="empty-state-text">Nenhuma máquina conectada</p>
           <p className="empty-state-subtext">Inicie o socket-client.php para conectar uma máquina</p>

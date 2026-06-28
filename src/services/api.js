@@ -1,36 +1,13 @@
-// centraliza as chamadas http
+// Centraliza o endereço base do servidor de sockets para requisições HTTP
 const BASE_URL = 'http://localhost:4000';
-// Desabilita timeout no frontend para testar a requisição sem cancelamento
-const TIMEOUT_MS = 0;
 
-// Helper para fazer requisições com timeout opcional
-async function fetchWithTimeout(url, options = {}) {
-    const controller = new AbortController();
-    let timeoutId;
-
-    if (TIMEOUT_MS > 0) {
-        timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    }
-
-    try {
-        const response = await fetch(url, {
-            ...options,
-            signal: controller.signal
-        });
-        if (timeoutId) clearTimeout(timeoutId);
-        return response;
-    } catch (error) {
-        if (timeoutId) clearTimeout(timeoutId);
-        if (error.name === 'AbortError') {
-            throw new Error(`Requisição expirou após ${TIMEOUT_MS / 1000}s. Verifique se o cliente está conectado ao servidor.`);
-        }
-        throw error;
-    }
-}
-
+/**
+ * Busca a lista de clientes (máquinas dos laboratórios) conectados ao servidor.
+ * @returns {Promise<Array>} Retorna uma promessa com o array de máquinas ativas.
+ */
 export async function listClients() {
     try {
-        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/clients`);
+        const response = await fetch(`${BASE_URL}/api/v1/clients`);
         
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -44,10 +21,15 @@ export async function listClients() {
     }
 }
 
+/**
+ * Envia uma requisição contendo um comando de shell para execução em uma máquina destino.
+ * @param {string} event - O comando a ser executado na máquina (ex: whoami, ipconfig).
+ * @param {string} channel - O UUID v4 correspondente à máquina de destino.
+ * @returns {Promise<Object>} Retorna o resultado contendo o output gerado pelo terminal.
+ */
 export async function sendCommand(event, channel) {
     try {
-        console.log('Enviando comando:', { event, channel });
-        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/events`, {
+        const response = await fetch(`${BASE_URL}/api/v1/events`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -61,7 +43,6 @@ export async function sendCommand(event, channel) {
         }
         
         const data = await response.json();
-        console.log('Resultado do comando:', data);
         return data;
     } catch (error) {
         console.error('Erro em sendCommand:', error);

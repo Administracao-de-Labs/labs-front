@@ -2,12 +2,14 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 .machine-list-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 28px;
   flex-wrap: wrap;
   gap: 16px;
@@ -54,30 +56,34 @@
   cursor: not-allowed;
 }
 
+/* Base estrutural do grid para smartphones na vertical */
 .machines-grid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  width: 100%;
 }
 
-/* Tablet */
+/* Configuração do grid para tablets (A partir de 640px de largura) */
 @media (min-width: 640px) {
   .machines-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Desktop */
+/* Configuração para desktops e laptops padrão (A partir de 1024px) */
 @media (min-width: 1024px) {
   .machines-grid {
-    grid-template-columns: repeat(3, 1fr);
+    /* Define no máximo 2 colunas para priorizar a largura dos painéis de OUTPUT */
+    grid-template-columns: repeat(2, 1fr); 
   }
 }
 
-/* Large Desktop */
+/* Configuração para telas grandes de computadores e monitores ultra-wide (A partir de 1440px) */
 @media (min-width: 1440px) {
   .machines-grid {
-    grid-template-columns: repeat(4, 1fr);
+    /* Limita a 3 colunas para garantir que o aumento de máquinas não comprima o terminal de comandos */
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -115,12 +121,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 .error-container {
@@ -152,6 +154,7 @@
   border-radius: 16px;
   padding: 60px 20px;
   text-align: center;
+  width: 100%;
 }
 
 .empty-state-text {
@@ -165,4 +168,20 @@
   font-size: 14px;
   color: #6b7280;
   margin: 0;
+}
+
+/* Otimização interna dos cabeçalhos para aparelhos celulares pequenos */
+@media (max-width: 480px) {
+  .machine-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .refresh-button {
+    width: 100%;
+    justify-content: center;
+  }
+  .machine-list-title {
+    font-size: 24px;
+  }
 }

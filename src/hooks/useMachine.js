@@ -40,13 +40,14 @@ export function useMachine() {
         };
     }, [refreshClients]);
 
-    const runWhoami = useCallback(async (channel) => {
+    // Alterado: agora aceita o texto digitado (command) como parâmetro
+    const runCustomCommand = useCallback(async (command, channel) => {
         setRunCommandLoading(true);
         setRunCommandResult(null);
         
         try {
-            console.log('Executando comando whoami para:', channel);
-            const result = await sendCommand('whoami', channel);
+            console.log(`Executando comando ${command} para:`, channel);
+            const result = await sendCommand(command, channel);
             console.log('Resultado recebido:', result);
             setRunCommandResult(result);
         } catch (err) {
@@ -67,7 +68,7 @@ export function useMachine() {
         loading,
         error,
         refreshClients,
-        runWhoami,
+        runCustomCommand, // Nome atualizado no retorno
         runCommandLoading,
         runCommandResult
     };
