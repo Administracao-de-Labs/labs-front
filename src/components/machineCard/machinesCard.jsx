@@ -1,5 +1,5 @@
 import './machineCard.css'
-import { Monitor, Terminal, Loader, Copy, CheckCircle } from 'lucide-react'
+import { Monitor, Loader, Copy, CheckCircle } from 'lucide-react'
 import { useState } from 'react'
 
 // Mapeamento de classes CSS baseado no sistema operacional recebido do socket
@@ -17,21 +17,12 @@ function OsCor({ os }) {
 
 export default function MachineCard({ machine, onRunCommand, loading, result }) {
   const [copiedField, setCopiedField] = useState(null)
-  const [command, setCommand] = useState('')
 
   // Copia cadeias de texto para a área de transferência com feedback visual temporário
   const copyToClipboard = (text, field) => {
     navigator.clipboard.writeText(text)
     setCopiedField(field)
     setTimeout(() => setCopiedField(null), 2000)
-  }
-
-  // Despacha o comando customizado inserido no input de texto
-  const handleRunCommand = () => {
-    if (command.trim()) {
-      onRunCommand(command, machine.uuid)
-      setCommand('') 
-    }
   }
 
   // Identificação lógica para montagem da cadeia de comandos multiplataforma
@@ -165,36 +156,6 @@ export default function MachineCard({ machine, onRunCommand, loading, result }) 
           title="Obter resumo do hardware e versão operacional"
         >
           Hardware/SO
-        </button>
-      </div>
-
-      {/* Caixa de input manual */}
-      <div className="machine-card-command">
-        <div className="command-input-wrapper">
-          <Terminal size={18} className="command-icon" />
-          <input
-            type="text"
-            value={command}
-            onChange={(e) => setCommand(e.target.value)}
-            placeholder="Ou digite um comando manual..."
-            className="command-input"
-            disabled={loading}
-            onKeyPress={(e) => e.key === 'Enter' && handleRunCommand()}
-          />
-        </div>
-        <button
-          onClick={handleRunCommand}
-          disabled={loading}
-          className="command-button"
-        >
-          {loading ? (
-            <>
-              <Loader size={16} className="spinning" />
-              ...
-            </>
-          ) : (
-            'Enviar'
-          )}
         </button>
       </div>
 
